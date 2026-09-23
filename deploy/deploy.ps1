@@ -21,11 +21,25 @@ param(
 $RepoRoot = Split-Path -Parent $PSScriptRoot
 $RemoteStaging = "/tmp/mindkids-bot-src"
 
-function Assert-ExitCode {
-    param([string]$Description)
-    if ($LASTEXITCODE -ne 0) {
-        throw "$Description failed with exit code $LASTEXITCODE"
+# The route to the server intermittently resets new SSH connections before the
+# banner (exit 255), often right after a previous successful one. Every remote
+# step below is idempotent, so a connection failure is simply retried.
+$SshRetries = 5
+$SshRetryDelaySec = 10
+$SshConnectionFailed = 255
+
+function Invoke-Remote {
+    param([string]$Description, [scriptblock]$Command, [switch]$RetryAnyFailure)
+    for ($attempt = 1; $attempt -le $SshRetries; $attempt++) {
+        & $Command
+        if ($LASTEXITCODE -eq 0) { return }
+        # scp reports a dropped connection as 1, not 255; it is safe to rerun.
+        $retryable = ($LASTEXITCODE -eq $SshConnectionFailed) -or $RetryAnyFailure
+        if (-not $retryable -or $attempt -eq $SshRetries) { break }
+        Write-Host "   $Description failed (exit $LASTEXITCODE), retry $attempt/$($SshRetries - 1) in ${SshRetryDelaySec}s"
+        Start-Sleep -Seconds $SshRetryDelaySec
     }
+    throw "$Description failed with exit code $LASTEXITCODE"
 }
 
 # ---- 1. Build a clean local staging dir (exclude venv/cache/secrets/data) ----
@@ -71,22 +85,18 @@ try {
     $ErrorActionPreference = "Continue"
 
     Write-Host "==> Resetting remote staging dir"
-    ssh $Server "rm -rf $RemoteStaging && mkdir -p $RemoteStaging"
-    Assert-ExitCode "ssh (reset remote staging dir)"
+    Invoke-Remote "ssh (reset remote staging dir)" { ssh $Server "rm -rf $RemoteStaging && mkdir -p $RemoteStaging" }
 
     Write-Host "==> Copying files to $Server`:$RemoteStaging"
-    scp -r "$Staging/bot" "$Staging/deploy" "${Server}:${RemoteStaging}/"
-    Assert-ExitCode "scp"
+    Invoke-Remote "scp" { scp -r "$Staging/bot" "$Staging/deploy" "${Server}:${RemoteStaging}/" } -RetryAnyFailure
 
     # ---- 3. Install/update on the server ----
     Write-Host "==> Running install.sh on the server"
-    ssh $Server "sudo bash $RemoteStaging/deploy/install.sh"
-    Assert-ExitCode "ssh (install.sh)"
+    Invoke-Remote "ssh (install.sh)" { ssh $Server "sudo bash $RemoteStaging/deploy/install.sh" }
 
     # ---- 4. Report status ----
     Write-Host "==> Service status"
-    ssh $Server "systemctl is-active mindkids-bot; journalctl -u mindkids-bot -n 20 --no-pager"
-    Assert-ExitCode "ssh (status check)"
+    Invoke-Remote "ssh (status check)" { ssh $Server "systemctl is-active mindkids-bot; journalctl -u mindkids-bot -n 20 --no-pager" }
 }
 finally {
     # Always cleaned up, including when scp/ssh throws above.

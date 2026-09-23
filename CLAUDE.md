@@ -12,15 +12,17 @@ Mind Kids is a Telegram Mini App with 37 brain-training games for children aged 
 node scripts/check-i18n.js     # I18N uz/ru key parity + placeholders, LX word lists, COLORS, SHAPE_N, all 37 def() have uz+ru name/desc
 node scripts/check-age-cfg.js  # AGE_CFG difficulty table (games 31-37) in bounds for every age x level 1..10
 python -m http.server 8765     # serve locally; open http://localhost:8765/mind-kids.html (Playwright blocks file://)
-pip install -r bot/requirements-dev.txt; pytest bot/   # bot tests
-powershell -File deploy/deploy.ps1   # deploy bot to Hetzner (see docs/specs/telegram-bot-deploy.md)
+pip install -r bot/requirements-dev.txt; pytest bot/   # bot tests (local venv: bot/.venv)
+pytest bot/test_bot.py -k stats                          # single test / subset
+powershell -File deploy/deploy.ps1 -StageOnly            # dry run: print what would be shipped, no ssh
+powershell -File deploy/deploy.ps1                       # deploy bot to Hetzner (root@178.104.103.113)
 ```
 
 The check scripts read `mind-kids.html` as text and `eval` object literals out of it by matching markers such as `const I18N=`, `const AGE_CFG={`, `const COLORS={`, `const SHAPE_N={` and `def({name:{uz:`. If you rename or reshape these, the scripts break.
 
 To syntax-check the JS, extract the inline `<script>` block to a temporary file and run `node --check` on it.
 
-There is no test runner. Behaviour is verified in a browser. Top-level `const`s and functions (`S`, `G`, `openGame`, `closeGame`, `makeApi`, `Voice`, `Snd`) are reachable from `page.evaluate`, so game flows can be driven programmatically.
+The mini app has no test runner. Its behaviour is verified in a browser. Top-level `const`s and functions (`S`, `G`, `openGame`, `closeGame`, `makeApi`, `Voice`, `Snd`) are reachable from `page.evaluate`, so game flows can be driven programmatically.
 
 ## Code style
 
@@ -59,9 +61,28 @@ Lives: there are 3 per game. `S.rl` counts lives lost in the current round, so i
 
 **Theming.** Colours are CSS tokens on `:root`, overridden under `:root[data-theme=dark]`. Use the tokens (`--brand`, `--ok`, `--bad`, `--card`, …) and never hard-coded colours.
 
+## Bot and deployment
+
+**Mini app (Vercel).** `vercel.json` rewrites `/` to `/mind-kids.html`, so the file keeps its name (the check scripts also depend on it). `.vercelignore` keeps `bot/`, `deploy/`, `docs/` and `scripts/` off the public site. There is no CSP header, because the page relies on inline script and style. Live URL: `https://mind-kids.vercel.app`.
+
+**Bot (`bot/`, @MindKidsUzbot).** It uses aiogram 3 with long polling and is modelled on the Dunyo Hotel mini-app bot.
+- `/start` sends the welcome photo with an inline `web_app` button. The photo's `file_id` is cached in memory after the first upload.
+- On startup the bot also sets the chat Menu Button to the mini app.
+- `/stats` is registered with an `is_admin` filter. A non-admin's `/stats` falls through to the catch-all fallback, so the command is never revealed.
+- `bot/db.py` (aiosqlite) stores only `user_id`, `first_seen` and `last_seen` in UTC. "Today" in the stats means Tashkent time (UTC+5).
+- Replies are Uzbek only, via `TEXTS["uz"]` in `bot.py`, which is kept as a dict so `ru` can be added.
+- The mini app never sends data to the bot: there is no `sendData`.
+
+**Server.** The host (Ubuntu, Python 3.14) is shared with about 9 other bots. Ours uses the `mindkids-bot.service` unit, the `/opt/mindkids-bot` directory and the non-root `mindkids` user. Never touch other units.
+- `deploy/install.sh` runs on the server and is idempotent. It never writes `bot/.env` (mode 600, holds `BOT_TOKEN`, `WEBAPP_URL`, `ADMIN_ID`) and never touches `bot/data/` (the SQLite DB).
+- `deploy.ps1` retries ssh and scp, because the connection to this host intermittently resets new SSH connections before the banner (exit 255).
+- Windows PowerShell 5.1 strips embedded double quotes from arguments passed to `ssh`. Remote commands that contain `"` break, so use single quotes or run them inside an interactive session.
+- Logs: `journalctl -u mindkids-bot -f`.
+
 ## Specs
 
 Feature work starts from a spec in `docs/specs/` (written in Uzbek, EARS-style rules plus acceptance criteria). Read the relevant spec before changing its area:
 - `new-games-integration.md` covers games 31–37 and `AGE_CFG`;
 - `i18n-ru-en.md` covers languages;
 - `round-flow-autoadvance.md` covers round end and voice.
+- `telegram-bot-deploy.md` covers the bot, Vercel and Hetzner deploy.
