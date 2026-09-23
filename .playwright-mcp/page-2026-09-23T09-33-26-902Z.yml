@@ -1,0 +1,289 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - img "Mind Kids" [ref=e5]
+    - button "Tilni almashtirish" [ref=e6] [cursor=pointer]: UZ
+    - button "Qorong‘i fonga o‘tish" [ref=e7] [cursor=pointer]: 🌙
+    - button "Ovoz" [ref=e8] [cursor=pointer]: 🔈
+    - button "Ota-ona paneli" [ref=e9] [cursor=pointer]: 📊
+  - generic [ref=e11]:
+    - heading "Salom! 👋" [level=1] [ref=e12]
+    - paragraph [ref=e13]: Bugun qaysi o‘yinni o‘ynaymiz?
+    - generic [ref=e14]: ⭐ 0 / 111 yulduz
+  - generic [ref=e15]:
+    - generic [ref=e16]:
+      - button "Barchasi" [pressed] [ref=e17] [cursor=pointer]
+      - button "4–6 yosh" [ref=e18] [cursor=pointer]
+      - button "7–9 yosh" [ref=e19] [cursor=pointer]
+      - button "10–12 yosh" [ref=e20] [cursor=pointer]
+    - generic [ref=e21]:
+      - button "🧠 Mantiq" [ref=e22] [cursor=pointer]
+      - button "🎨 Tasavvur" [ref=e23] [cursor=pointer]
+      - button "🚀 Super miya" [ref=e24] [cursor=pointer]
+  - generic [ref=e25]: 37 ta o‘yin
+  - generic [ref=e26]:
+    - button "🔢 Sonni top Rasmlarni sanab, to‘g‘ri sonni tanlang. 4–6 yosh ☆☆☆" [ref=e27] [cursor=pointer]:
+      - generic [ref=e28]: 🔢
+      - generic [ref=e29]: Sonni top
+      - generic [ref=e30]: Rasmlarni sanab, to‘g‘ri sonni tanlang.
+      - generic [ref=e31]:
+        - generic [ref=e32]: 4–6 yosh
+        - generic [ref=e33]: ☆☆☆
+    - button "🔤 Harfni top Berilgan harfning hammasini toping. 4–6 yosh ☆☆☆" [ref=e34] [cursor=pointer]:
+      - generic [ref=e35]: 🔤
+      - generic [ref=e36]: Harfni top
+      - generic [ref=e37]: Berilgan harfning hammasini toping.
+      - generic [ref=e38]:
+        - generic [ref=e39]: 4–6 yosh
+        - generic [ref=e40]: ☆☆☆
+    - button "🧩 Qaysi biri ortiqcha? Guruhga mos kelmaydigan narsani toping. 4–6 yosh ☆☆☆" [ref=e41] [cursor=pointer]:
+      - generic [ref=e42]: 🧩
+      - generic [ref=e43]: Qaysi biri ortiqcha?
+      - generic [ref=e44]: Guruhga mos kelmaydigan narsani toping.
+      - generic [ref=e45]:
+        - generic [ref=e46]: 4–6 yosh
+        - generic [ref=e47]: ☆☆☆
+    - button "⚡ Tez hisobla Misollarni vaqt tugashidan oldin yeching. 7–9 yosh ☆☆☆" [ref=e48] [cursor=pointer]:
+      - generic [ref=e49]: ⚡
+      - generic [ref=e50]: Tez hisobla
+      - generic [ref=e51]: Misollarni vaqt tugashidan oldin yeching.
+      - generic [ref=e52]:
+        - generic [ref=e53]: 7–9 yosh
+        - generic [ref=e54]: ☆☆☆
+    - button "🔗 Sonlar zanjiri Zanjirdagi yo‘qolgan sonni toping. 7–9 yosh ☆☆☆" [ref=e55] [cursor=pointer]:
+      - generic [ref=e56]: 🔗
+      - generic [ref=e57]: Sonlar zanjiri
+      - generic [ref=e58]: Zanjirdagi yo‘qolgan sonni toping.
+      - generic [ref=e59]:
+        - generic [ref=e60]: 7–9 yosh
+        - generic [ref=e61]: ☆☆☆
+    - button "📝 So‘zni tuz Harflarni to‘g‘ri tartibda bosib so‘z yig‘ing. 7–9 yosh ☆☆☆" [ref=e62] [cursor=pointer]:
+      - generic [ref=e63]: 📝
+      - generic [ref=e64]: So‘zni tuz
+      - generic [ref=e65]: Harflarni to‘g‘ri tartibda bosib so‘z yig‘ing.
+      - generic [ref=e66]:
+        - generic [ref=e67]: 7–9 yosh
+        - generic [ref=e68]: ☆☆☆
+    - button "🧠 Matematik jumboq Rasmli tenglamalardan noma’lumni toping. 10–12 yosh ☆☆☆" [ref=e69] [cursor=pointer]:
+      - generic [ref=e70]: 🧠
+      - generic [ref=e71]: Matematik jumboq
+      - generic [ref=e72]: Rasmli tenglamalardan noma’lumni toping.
+      - generic [ref=e73]:
+        - generic [ref=e74]: 10–12 yosh
+        - generic [ref=e75]: ☆☆☆
+    - button "🔍 Xatoni top Qoidaga mos kelmaydigan sonni bosing. 10–12 yosh ☆☆☆" [ref=e76] [cursor=pointer]:
+      - generic [ref=e77]: 🔍
+      - generic [ref=e78]: Xatoni top
+      - generic [ref=e79]: Qoidaga mos kelmaydigan sonni bosing.
+      - generic [ref=e80]:
+        - generic [ref=e81]: 10–12 yosh
+        - generic [ref=e82]: ☆☆☆
+    - button "❓ Sirli ketma-ketlik Murakkab naqshning davomini toping. 10–12 yosh ☆☆☆" [ref=e83] [cursor=pointer]:
+      - generic [ref=e84]: ❓
+      - generic [ref=e85]: Sirli ketma-ketlik
+      - generic [ref=e86]: Murakkab naqshning davomini toping.
+      - generic [ref=e87]:
+        - generic [ref=e88]: 10–12 yosh
+        - generic [ref=e89]: ☆☆☆
+    - button "🌈 Ranglar olami Narsa qanday rangda ekanini toping. 4–6 yosh ☆☆☆" [ref=e90] [cursor=pointer]:
+      - generic [ref=e91]: 🌈
+      - generic [ref=e92]: Ranglar olami
+      - generic [ref=e93]: Narsa qanday rangda ekanini toping.
+      - generic [ref=e94]:
+        - generic [ref=e95]: 4–6 yosh
+        - generic [ref=e96]: ☆☆☆
+    - button "🔷 Shaklni top Narsa qaysi shaklga o‘xshashini toping. 4–6 yosh ☆☆☆" [ref=e97] [cursor=pointer]:
+      - generic [ref=e98]: 🔷
+      - generic [ref=e99]: Shaklni top
+      - generic [ref=e100]: Narsa qaysi shaklga o‘xshashini toping.
+      - generic [ref=e101]:
+        - generic [ref=e102]: 4–6 yosh
+        - generic [ref=e103]: ☆☆☆
+    - button "🐒 Kimga nima kerak? Har kimga va har narsaga mos juftini toping. 4–6 yosh ☆☆☆" [ref=e104] [cursor=pointer]:
+      - generic [ref=e105]: 🐒
+      - generic [ref=e106]: Kimga nima kerak?
+      - generic [ref=e107]: Har kimga va har narsaga mos juftini toping.
+      - generic [ref=e108]:
+        - generic [ref=e109]: 4–6 yosh
+        - generic [ref=e110]: ☆☆☆
+    - button "🪞 Ko‘zgudagi shakl Shaklning ko‘zgudagi aksini toping. 7–9 yosh ☆☆☆" [ref=e111] [cursor=pointer]:
+      - generic [ref=e112]: 🪞
+      - generic [ref=e113]: Ko‘zgudagi shakl
+      - generic [ref=e114]: Shaklning ko‘zgudagi aksini toping.
+      - generic [ref=e115]:
+        - generic [ref=e116]: 7–9 yosh
+        - generic [ref=e117]: ☆☆☆
+    - button "🔄 Aylantirib top Shakl burilganda qanday ko‘rinishini toping. 7–9 yosh ☆☆☆" [ref=e118] [cursor=pointer]:
+      - generic [ref=e119]: 🔄
+      - generic [ref=e120]: Aylantirib top
+      - generic [ref=e121]: Shakl burilganda qanday ko‘rinishini toping.
+      - generic [ref=e122]:
+        - generic [ref=e123]: 7–9 yosh
+        - generic [ref=e124]: ☆☆☆
+    - button "🧱 Figurani yig‘ Namunadagi rasmni kataklarni bo‘yab chizing. 7–9 yosh ☆☆☆" [ref=e125] [cursor=pointer]:
+      - generic [ref=e126]: 🧱
+      - generic [ref=e127]: Figurani yig‘
+      - generic [ref=e128]: Namunadagi rasmni kataklarni bo‘yab chizing.
+      - generic [ref=e129]:
+        - generic [ref=e130]: 7–9 yosh
+        - generic [ref=e131]: ☆☆☆
+    - button "🗺️ Aqlli labirint Haqiqiy labirintdan chiqish yo‘lini toping. 10–12 yosh ☆☆☆" [ref=e132] [cursor=pointer]:
+      - generic [ref=e133]: 🗺️
+      - generic [ref=e134]: Aqlli labirint
+      - generic [ref=e135]: Haqiqiy labirintdan chiqish yo‘lini toping.
+      - generic [ref=e136]:
+        - generic [ref=e137]: 10–12 yosh
+        - generic [ref=e138]: ☆☆☆
+    - button "🔎 Farqni top PRO Ikki rasm orasidagi barcha farqlarni toping. 10–12 yosh ☆☆☆" [ref=e139] [cursor=pointer]:
+      - generic [ref=e140]: 🔎
+      - generic [ref=e141]: Farqni top PRO
+      - generic [ref=e142]: Ikki rasm orasidagi barcha farqlarni toping.
+      - generic [ref=e143]:
+        - generic [ref=e144]: 10–12 yosh
+        - generic [ref=e145]: ☆☆☆
+    - button "🎨 Naqsh matritsasi 3×3 jadvaldagi yetishmayotgan katakni toping. 10–12 yosh ☆☆☆" [ref=e146] [cursor=pointer]:
+      - generic [ref=e147]: 🎨
+      - generic [ref=e148]: Naqsh matritsasi
+      - generic [ref=e149]: 3×3 jadvaldagi yetishmayotgan katakni toping.
+      - generic [ref=e150]:
+        - generic [ref=e151]: 10–12 yosh
+        - generic [ref=e152]: ☆☆☆
+    - button "🃏 Memory Match Kartalarni ochib, bir xil juftlarni toping. 4–6 yosh ☆☆☆" [ref=e153] [cursor=pointer]:
+      - generic [ref=e154]: 🃏
+      - generic [ref=e155]: Memory Match
+      - generic [ref=e156]: Kartalarni ochib, bir xil juftlarni toping.
+      - generic [ref=e157]:
+        - generic [ref=e158]: 4–6 yosh
+        - generic [ref=e159]: ☆☆☆
+    - button "👀 Top va bos Faqat kerakli hayvon chiqqanda tez bosing. 4–6 yosh ☆☆☆" [ref=e160] [cursor=pointer]:
+      - generic [ref=e161]: 👀
+      - generic [ref=e162]: Top va bos
+      - generic [ref=e163]: Faqat kerakli hayvon chiqqanda tez bosing.
+      - generic [ref=e164]:
+        - generic [ref=e165]: 4–6 yosh
+        - generic [ref=e166]: ☆☆☆
+    - button "🎵 Ritmni takrorla Yongan tugmalar tartibini eslab, takrorlang. 4–6 yosh ☆☆☆" [ref=e167] [cursor=pointer]:
+      - generic [ref=e168]: 🎵
+      - generic [ref=e169]: Ritmni takrorla
+      - generic [ref=e170]: Yongan tugmalar tartibini eslab, takrorlang.
+      - generic [ref=e171]:
+        - generic [ref=e172]: 4–6 yosh
+        - generic [ref=e173]: ☆☆☆
+    - 'button "🧩 Smart Puzzle 4×4 rasmli sudoku: har qatorda har rasm bir marta. 7–9 yosh ☆☆☆" [ref=e174] [cursor=pointer]':
+      - generic [ref=e175]: 🧩
+      - generic [ref=e176]: Smart Puzzle
+      - generic [ref=e177]: "4×4 rasmli sudoku: har qatorda har rasm bir marta."
+      - generic [ref=e178]:
+        - generic [ref=e179]: 7–9 yosh
+        - generic [ref=e180]: ☆☆☆
+    - button "🎯 Rang + Son Aralash shakllar ichidan keraklisini sanang. 7–9 yosh ☆☆☆" [ref=e181] [cursor=pointer]:
+      - generic [ref=e182]: 🎯
+      - generic [ref=e183]: Rang + Son
+      - generic [ref=e184]: Aralash shakllar ichidan keraklisini sanang.
+      - generic [ref=e185]:
+        - generic [ref=e186]: 7–9 yosh
+        - generic [ref=e187]: ☆☆☆
+    - button "🔢 Tezkor kombinatsiya 1 dan boshlab sonlarni tartib bilan tez bosing. 7–9 yosh ☆☆☆" [ref=e188] [cursor=pointer]:
+      - generic [ref=e189]: 🔢
+      - generic [ref=e190]: Tezkor kombinatsiya
+      - generic [ref=e191]: 1 dan boshlab sonlarni tartib bilan tez bosing.
+      - generic [ref=e192]:
+        - generic [ref=e193]: 7–9 yosh
+        - generic [ref=e194]: ☆☆☆
+    - button "🏗️ Brain Builder Bir lahza yongan kataklar joyini eslab qoling. 10–12 yosh ☆☆☆" [ref=e195] [cursor=pointer]:
+      - generic [ref=e196]: 🏗️
+      - generic [ref=e197]: Brain Builder
+      - generic [ref=e198]: Bir lahza yongan kataklar joyini eslab qoling.
+      - generic [ref=e199]:
+        - generic [ref=e200]: 10–12 yosh
+        - generic [ref=e201]: ☆☆☆
+    - button "🚀 Brain Speed Rasm oldingisi bilan bir xilmi? Tez javob bering. 10–12 yosh ☆☆☆" [ref=e202] [cursor=pointer]:
+      - generic [ref=e203]: 🚀
+      - generic [ref=e204]: Brain Speed
+      - generic [ref=e205]: Rasm oldingisi bilan bir xilmi? Tez javob bering.
+      - generic [ref=e206]:
+        - generic [ref=e207]: 10–12 yosh
+        - generic [ref=e208]: ☆☆☆
+    - button "💾 Super Memory Belgilar ketma-ketligini xuddi shu tartibda kiriting. 10–12 yosh ☆☆☆" [ref=e209] [cursor=pointer]:
+      - generic [ref=e210]: 💾
+      - generic [ref=e211]: Super Memory
+      - generic [ref=e212]: Belgilar ketma-ketligini xuddi shu tartibda kiriting.
+      - generic [ref=e213]:
+        - generic [ref=e214]: 10–12 yosh
+        - generic [ref=e215]: ☆☆☆
+    - button "🤖 Robotni boshqar Strelkalardan dastur tuzib, robotni ⭐ ga yetkazing. 10–12 yosh ☆☆☆" [ref=e216] [cursor=pointer]:
+      - generic [ref=e217]: 🤖
+      - generic [ref=e218]: Robotni boshqar
+      - generic [ref=e219]: Strelkalardan dastur tuzib, robotni ⭐ ga yetkazing.
+      - generic [ref=e220]:
+        - generic [ref=e221]: 10–12 yosh
+        - generic [ref=e222]: ☆☆☆
+    - button "🥁 Beat & Brain Ritmni tinglang va uning yozuvini toping. 10–12 yosh ☆☆☆" [ref=e223] [cursor=pointer]:
+      - generic [ref=e224]: 🥁
+      - generic [ref=e225]: Beat & Brain
+      - generic [ref=e226]: Ritmni tinglang va uning yozuvini toping.
+      - generic [ref=e227]:
+        - generic [ref=e228]: 10–12 yosh
+        - generic [ref=e229]: ☆☆☆
+    - button "🏆 Brain Challenge Turli o‘yinlardan aralash topshiriqlar, vaqt bilan. 10–12 yosh ☆☆☆" [ref=e230] [cursor=pointer]:
+      - generic [ref=e231]: 🏆
+      - generic [ref=e232]: Brain Challenge
+      - generic [ref=e233]: Turli o‘yinlardan aralash topshiriqlar, vaqt bilan.
+      - generic [ref=e234]:
+        - generic [ref=e235]: 10–12 yosh
+        - generic [ref=e236]: ☆☆☆
+    - button "🔢 Schulte jadvali 1 dan boshlab sonlarni tartib bilan tez toping. 4–12 yosh ☆☆☆" [ref=e237] [cursor=pointer]:
+      - generic [ref=e238]: 🔢
+      - generic [ref=e239]: Schulte jadvali
+      - generic [ref=e240]: 1 dan boshlab sonlarni tartib bilan tez toping.
+      - generic [ref=e241]:
+        - generic [ref=e242]: 4–12 yosh
+        - generic [ref=e243]: ☆☆☆
+    - button "🎨 Rang chalg‘itadi So‘zning ma’nosiga emas, yozuv rangiga qarab tanlang. 4–12 yosh ☆☆☆" [ref=e244] [cursor=pointer]:
+      - generic [ref=e245]: 🎨
+      - generic [ref=e246]: Rang chalg‘itadi
+      - generic [ref=e247]: So‘zning ma’nosiga emas, yozuv rangiga qarab tanlang.
+      - generic [ref=e248]:
+        - generic [ref=e249]: 4–12 yosh
+        - generic [ref=e250]: ☆☆☆
+    - button "➕ Yodda qo‘sh Ko‘rsatilgan sonlarni yodda qo‘shib, yig‘indisini toping. 4–12 yosh ☆☆☆" [ref=e251] [cursor=pointer]:
+      - generic [ref=e252]: ➕
+      - generic [ref=e253]: Yodda qo‘sh
+      - generic [ref=e254]: Ko‘rsatilgan sonlarni yodda qo‘shib, yig‘indisini toping.
+      - generic [ref=e255]:
+        - generic [ref=e256]: 4–12 yosh
+        - generic [ref=e257]: ☆☆☆
+    - button "📍 Sonlar joyi Sonlar qayerda turganini eslab, 1 dan boshlab tartib bilan bosing. 4–12 yosh ☆☆☆" [ref=e258] [cursor=pointer]:
+      - generic [ref=e259]: 📍
+      - generic [ref=e260]: Sonlar joyi
+      - generic [ref=e261]: Sonlar qayerda turganini eslab, 1 dan boshlab tartib bilan bosing.
+      - generic [ref=e262]:
+        - generic [ref=e263]: 4–12 yosh
+        - generic [ref=e264]: ☆☆☆
+    - button "⬛ Qora kataklar Bir lahza qorayib turgan kataklarni eslab, hammasini toping. 4–12 yosh ☆☆☆" [ref=e265] [cursor=pointer]:
+      - generic [ref=e266]: ⬛
+      - generic [ref=e267]: Qora kataklar
+      - generic [ref=e268]: Bir lahza qorayib turgan kataklarni eslab, hammasini toping.
+      - generic [ref=e269]:
+        - generic [ref=e270]: 4–12 yosh
+        - generic [ref=e271]: ☆☆☆
+    - button "🪰 Chivin yo‘li Chivin qayerga uchib borganini strelkalardan kuzatib, joyini toping. 4–12 yosh ☆☆☆" [ref=e272] [cursor=pointer]:
+      - generic [ref=e273]: 🪰
+      - generic [ref=e274]: Chivin yo‘li
+      - generic [ref=e275]: Chivin qayerga uchib borganini strelkalardan kuzatib, joyini toping.
+      - generic [ref=e276]:
+        - generic [ref=e277]: 4–12 yosh
+        - generic [ref=e278]: ☆☆☆
+    - button "🧮 Og‘zaki hisob Misolni tez yeching — 5 ta savoldan iborat. 4–12 yosh ☆☆☆" [ref=e279] [cursor=pointer]:
+      - generic [ref=e280]: 🧮
+      - generic [ref=e281]: Og‘zaki hisob
+      - generic [ref=e282]: Misolni tez yeching — 5 ta savoldan iborat.
+      - generic [ref=e283]:
+        - generic [ref=e284]: 4–12 yosh
+        - generic [ref=e285]: ☆☆☆
+  - generic [ref=e286]:
+    - generic [ref=e287]: 👨‍👩‍👧
+    - generic [ref=e288]:
+      - generic [ref=e289]: Ota-onalar uchun
+      - text: Ko‘nikmalar, aniqlik va tavsiyalar
+    - button "Ko‘rish" [ref=e290] [cursor=pointer]
+  - contentinfo [ref=e291]: Mind Kids © 2026 · O‘yin orqali o‘rganish
