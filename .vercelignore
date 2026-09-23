@@ -1,0 +1,7 @@
+bot/
+deploy/
+docs/
+scripts/
+.playwright-mcp/
+CLAUDE.md
+.gitattributes

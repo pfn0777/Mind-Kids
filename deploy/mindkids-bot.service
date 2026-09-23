@@ -1,0 +1,41 @@
+[Unit]
+# Deliberately NOT named after any of the other bots on this server — this
+# unit name and /opt path are unique to Mind Kids.
+Description=Mind Kids Telegram bot (aiogram, long polling)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=mindkids
+Group=mindkids
+
+# bot.py does `import db` — a flat import with no package, so the process
+# must start with bot/ as its working directory. load_dotenv() finds
+# bot/.env from here; there is no EnvironmentFile on purpose, so the .env has
+# exactly one reader.
+WorkingDirectory=/opt/mindkids-bot/bot
+ExecStart=/opt/mindkids-bot/.venv/bin/python bot.py
+
+# Telegram long polling dies on any sustained network fault; without this the
+# bot silently stops responding until someone notices.
+Restart=always
+RestartSec=5
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=mindkids-bot
+
+# The bot needs the network and its own directory. Nothing else.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/mindkids-bot
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

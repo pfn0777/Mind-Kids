@@ -1,0 +1,13 @@
+# Python 3.11+ (the VPS runs 3.14).
+# Pinned exactly: the bot runs unattended on a VPS, so a `pip install` months
+# from now must produce the same bot that was tested. Bump these by hand.
+#
+# aiogram 3.30.0 resolves to a pydantic with cp314 wheels (older aiogram
+# versions pin a pydantic whose pydantic-core has no cp314 wheel and fails to
+# build from source on the server) — same reasoning as the Dunyo Hotel bot,
+# which runs aiogram==3.30.0 on this same server.
+aiogram==3.30.0
+python-dotenv==1.0.1
+# Pure Python (no C extension), so it installs cleanly on Python 3.14 with no
+# prebuilt wheel needed.
+aiosqlite==0.20.0
