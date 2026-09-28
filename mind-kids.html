@@ -229,7 +229,7 @@ const pick=a=>a[Math.floor(R()*a.length)];
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const sample=(a,n)=>shuffle(a).slice(0,n);
 const range=n=>[...Array(n).keys()];
-function numOpts(ans,cands,n=4,min=0){const s=new Set([ans]);for(const c of shuffle(cands)){if(s.size>=n)break;if(Number.isInteger(c)&&c>=min)s.add(c)}let k=1;while(s.size<n){const c=ans+(R()<.5?-k:k);if(c>=min)s.add(c);k++}return[...s]}
+function numOpts(ans,cands,n=4,min=0){const lo=[],hi=[],seen=new Set([ans]);for(const c of shuffle(cands)){if(!Number.isInteger(c)||c<min||seen.has(c))continue;seen.add(c);(c<ans?lo:hi).push(c)}const r=ri(0,Math.min(n-1,ans-min)),used=new Set([ans]),below=[],above=[];for(const c of lo){if(below.length>=r)break;below.push(c);used.add(c)}for(let k=1;below.length<r;k++){const c=ans-k;if(c>=min&&!used.has(c)){below.push(c);used.add(c)}}for(const c of hi){if(above.length>=n-1-r)break;above.push(c);used.add(c)}for(let k=1;above.length<n-1-r;k++){const c=ans+k;if(!used.has(c)){above.push(c);used.add(c)}}return[ans,...below,...above]}
 const strip=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent.trim()};
 
 /* ================= i18n ================= */
@@ -535,9 +535,9 @@ def({name:{uz:'Shaklni top',ru:'Найди форму'},age:'4-6',cat:'creative'
 gen(L){const s=pick(Object.keys(SHAPE_OBJ)),o=pick(SHAPE_OBJ[s]),others=sample(Object.keys(SHAPE_OBJ).filter(k=>k!==s),3);
   return{prompt:loc({uz:'Bu qaysi shaklga o‘xshaydi?',ru:'На какую форму это похоже?'}),say:loc({uz:'Bu qaysi shaklga o‘xshaydi?',ru:'На какую форму это похоже?'}),board:`<div style="font-size:84px;line-height:1">${o}</div>`,options:[s,...others].map(k=>shapeOpt(k)),key:o,explain:loc({uz:`${o} — ${SHAPE_N[s].uz.toLowerCase()} shaklida.`,ru:`${o} — это ${SHAPE_N[s].ru.w}.`})}}});
 
-/* 12 */ const NEEDS=[['🐒','🍌','a'],['🐝','🌸','a'],['🐰','🥕','a'],['🐶','🦴','a'],['🐼','🎋','a'],['🐿️','🌰','a'],['🐻','🍯','a'],['🐱','🐟','a'],['🐄','🌾','a'],['🦷','🪥','o'],['🔒','🔑','o'],['🌧️','☂️','o'],['✏️','📓','o'],['🎂','🕯️','o'],['🚗','⛽','o'],['✉️','📮','o'],['🖌️','🎨','o'],['🧦','👟','o'],['🍳','🥚','o'],['⚽','🥅','o'],['🌱','💧','o'],['🧵','🪡','o'],['🔦','🔋','o']];
+/* 12 */ const NEEDS=[['🐒','🍌','a'],['🐝','🌸','a'],['🐰','🥕','a'],['🐶','🦴','a'],['🐼','🎋','a'],['🐿️','🌰','a'],['🐻','🍯','a'],['🐱','🐟','a'],['🐄','🌾','a'],['🦷','🪥','o'],['🔒','🔑','o'],['🌧️','☂️','o'],['✏️','📓','o'],['🎂','🕯️','o'],['🚗','⛽','o'],['✉️','📮','o'],['🖌️','🎨','o'],['🧦','👟','o'],['🍳','🥚','o'],['⚽','🥅','o'],['🌱','💧','o'],['🧵','🪡','o'],['🔦','🔋','o']],NEEDS_CONFUSE=new Set(['🐻🐟','🐒🌰','🚗🔋','🎂🥚']);
 def({name:{uz:'Kimga nima kerak?',ru:'Кому что нужно?'},age:'4-6',cat:'creative',icon:'🐒',art:'a2',sk:['M'],desc:{uz:'Har kimga va har narsaga mos juftini toping.',ru:'Найдите подходящую пару для каждого.'},
-gen(L){const p=pick(NEEDS),ds=sample(NEEDS.filter(x=>x[2]!==p[2]).map(x=>x[1]),3);
+gen(L){const p=pick(NEEDS),ds=sample(NEEDS.filter(x=>x[2]===p[2]&&x!==p&&!NEEDS_CONFUSE.has(p[0]+x[1])).map(x=>x[1]),3);
   return{prompt:loc({uz:`${p[0]} ga nima kerak?`,ru:`Что нужно для ${p[0]}?`}),say:loc({uz:'Bunga nima kerak?',ru:'Что для этого нужно?'}),board:`<div style="font-size:84px;line-height:1">${p[0]}</div>`,options:[p[1],...ds],cls:'emo',key:p[0]}}});
 
 /* 13 */ def({name:{uz:'Ko‘zgudagi shakl',ru:'Отражение в зеркале'},age:'7-9',cat:'creative',icon:'🪞',art:'a3',sk:['F'],desc:{uz:'Shaklning ko‘zgudagi aksini toping.',ru:'Найдите отражение фигуры в зеркале.'},
@@ -604,9 +604,8 @@ mount(a){const L=a.L,lang=a.lang(),n=L<5?4:5,k=L<3?2:L<6?3:4,N=n*n,pool=sample(E
 def({name:{uz:'Naqsh matritsasi',ru:'Матрица узоров'},age:'10-12',cat:'creative',icon:'🎨',art:'a2',sk:['M','F'],desc:{uz:'3×3 jadvaldagi yetishmayotgan katakni toping.',ru:'Найдите недостающую клетку в таблице 3×3.'},
 gen(L){const sh=sample(MX_SH,3),co=sample(MX_C,3),mode=L<4?0:L<7?1:2;
   const cell=(i,j)=>mode===0?{s:sh[i],c:co[j],k:1}:mode===1?{s:sh[(i+j)%3],c:co[j],k:1}:{s:sh[(i+j)%3],c:co[(i+2*j)%3],k:i+1};
-  const mi=ri(0,2),mj=ri(0,2),ans=cell(mi,mj),sig=c=>c.s+c.c+c.k,set=new Set([sig(ans)]),ds=[];
-  const extraS=MX_SH.filter(x=>!sh.includes(x)),extraC=MX_C.filter(x=>!co.includes(x));
-  for(let t=0;ds.length<3&&t<200;t++){const c={...ans},m=pick(mode===2?['s','c','k']:['s','c']);if(m==='s')c.s=pick(t>40?[...sh,...extraS]:sh);if(m==='c')c.c=pick(t>40?[...co,...extraC]:co);if(m==='k')c.k=pick([1,2,3]);if(t>20&&R()<.5)c.s=pick(sh);if(!set.has(sig(c))){set.add(sig(c));ds.push(c)}}
+  const mi=ri(0,2),mj=ri(0,2),ans=cell(mi,mj),s2=pick(sh.filter(x=>x!==ans.s)),c2=pick(co.filter(x=>x!==ans.c)),k2=pick([1,2,3].filter(x=>x!==ans.k));
+  const ds=mode===2?[{...ans,s:s2,c:c2},{...ans,s:s2,k:k2},{...ans,c:c2,k:k2}]:[{...ans,s:s2},{...ans,c:c2},{...ans,s:s2,c:c2}];
   const html=c=>`<span class="mx">${Array(c.k).fill(svg(c.s,c.c,c.k>1?20:36)).join('')}</span>`;
   return{prompt:loc({uz:'Qaysi biri ? o‘rniga mos keladi?',ru:'Что подходит вместо знака ?'}),board:`<div class="mxg">${range(9).map(x=>{const i=Math.floor(x/3),j=x%3;return i===mi&&j===mj?'<div class="q">?</div>':`<div>${html(cell(i,j))}</div>`}).join('')}</div>`,
   options:[ans,...ds].map(html),key:sh.join('').slice(0,12)+co.join('').replace(/#/g,'').slice(0,9)+mode+mi+mj,explain:loc({uz:mode===2?'Qatorlar bo‘yicha soni, ustunlar bo‘yicha shakl va rang o‘zgaradi.':mode===1?'Har qator va ustunda shakl bir martadan uchraydi, rang esa ustun bo‘yicha bir xil.':'Har qatorda shakl bir xil, har ustunda rang bir xil.',ru:mode===2?'По строкам меняется количество, по столбцам — форма и цвет.':mode===1?'В каждой строке и столбце форма встречается по одному разу, а цвет одинаков в столбце.':'В каждой строке форма одна и та же, в каждом столбце — один цвет.'})}}});
@@ -696,14 +695,14 @@ mount(a){const L=a.L,lang=a.lang(),n=L<5?4:5,k=Math.min(3+Math.floor((L-1)*.6),n
 
 /* 26 */ const NB=['🍎','⭐','🐟','🚗','🎈','🌸','⚽','🐶'],NB_GAP_MS=400;
 def({name:{uz:'Brain Speed',ru:'Brain Speed'},age:'10-12',cat:'super',icon:'🚀',art:'a4',sk:['X','T'],desc:{uz:'Rasm oldingisi bilan bir xilmi? Tez javob bering.',ru:'Такая же картинка, как раньше? Отвечайте быстро.'},
-mount(a){const L=a.L,lang=a.lang(),nb=L<6?1:2,trials=8,T=Math.max(1500,3000-L*150),sy=sample(NB,L<4?4:5),seq=[];
-  for(let i=0;i<trials+nb;i++){if(i>=nb&&R()<.38)seq.push(seq[i-nb]);else{let x,g=0;do x=pick(sy);while(i>=nb&&x===seq[i-nb]&&++g<10);seq.push(x)}}
-  let i=0,right=0,waiting=false;const res=[];
+mount(a){const L=a.L,lang=a.lang(),nb=L<6?1:2,trials=8,T=Math.max(1500,3000-L*150),sy=sample(NB,L<4?4:5),mt=new Set(sample(range(trials),4)),seq=[];
+  for(let i=0;i<trials+nb;i++)seq.push(i>=nb&&mt.has(i-nb)?seq[i-nb]:pick(i>=nb?sy.filter(x=>x!==seq[i-nb]):sy));
+  let i=0,right=0,hitsM=0,hitsN=0,waiting=false;const res=[];
   a.board.innerHTML=`<div class="nbbox"></div><div class="dots">${range(trials).map(()=>'<i></i>').join('')}</div><div class="row"><button class="btn" data-a="1" disabled>✅ ${loc({uz:'Ha',ru:'Да'},lang)}</button><button class="btn" data-a="0" disabled>❌ ${loc({uz:'Yo‘q',ru:'Нет'},lang)}</button></div>`;
   const box=a.board.querySelector('.nbbox'),btns=[...a.board.querySelectorAll('[data-a]')],dots=[...a.board.querySelectorAll('.dots i')];const en=v=>btns.forEach(b=>b.disabled=!v);
   const q=loc({uz:nb===1?'Oldingisi bilan bir xilmi?':'2 ta oldingisi bilan bir xilmi?',ru:nb===1?'Такая же, как предыдущая?':'Такая же, как 2 назад?'},lang);
-  const advance=()=>{i++;if(i>=seq.length){const need=Math.ceil(trials*.75);if(right>=need)a.done(true,{bonus:(right-need)*30,msg:loc({uz:`${right}/${trials} to‘g‘ri.`,ru:`Верно: ${right}/${trials}.`},lang)});else a.done(false,{msg:loc({uz:`${right}/${trials} to‘g‘ri — kamida ${need} ta kerak edi.`,ru:`Верно: ${right}/${trials} — нужно было минимум ${need}.`},lang)});return}show()};
-  const answer=v=>{if(!waiting)return;waiting=false;en(false);const match=seq[i]===seq[i-nb],ok=v!==null&&(v===1)===match;if(ok){right++;Snd.tap()}box.classList.add(ok?'good':'wrong');dots[i-nb].classList.add(ok?'y':'x');a.later(advance,380)};
+  const advance=()=>{i++;if(i>=seq.length){if(hitsM>=3&&hitsN>=3)a.done(true,{bonus:(right-6)*30,msg:loc({uz:`${right}/${trials} to‘g‘ri.`,ru:`Верно: ${right}/${trials}.`},lang)});else a.done(false,{msg:loc({uz:`Mos kelganlardan ${hitsM}/4, mos kelmaganlardan ${hitsN}/4 topildi — har biridan kamida 3 ta kerak edi.`,ru:`Совпадений найдено ${hitsM}/4, несовпадений ${hitsN}/4 — нужно минимум по 3.`},lang)});return}show()};
+  const answer=v=>{if(!waiting)return;waiting=false;en(false);const match=seq[i]===seq[i-nb],ok=v!==null&&(v===1)===match;if(ok){right++;match?hitsM++:hitsN++;Snd.tap()}box.classList.add(ok?'good':'wrong');dots[i-nb].classList.add(ok?'y':'x');a.later(advance,380)};
   const show=()=>{box.textContent='';box.className='nbbox';a.later(()=>{box.textContent=seq[i];box.classList.remove('in');void box.offsetWidth;box.classList.add('in');if(i<nb){a.prompt(loc({uz:`Eslab qoling… (${i+1}-rasm)`,ru:`Запоминайте… (картинка ${i+1})`},lang));a.later(advance,T*.8)}else{waiting=true;en(true);a.prompt(q);const my=i;a.later(()=>{if(waiting&&i===my)answer(null)},T)}},NB_GAP_MS)};
   a.prompt(loc({uz:nb===1?'Har bir rasm oldingisi bilan bir xilmi?':'Har bir rasm 2 ta oldingisi bilan bir xilmi?',ru:nb===1?'Каждая картинка такая же, как предыдущая?':'Каждая картинка такая же, как 2 назад?'},lang),loc({uz:'Har bir rasmni oldingisi bilan solishtiring',ru:'Сравнивайте каждую картинку с предыдущей'},lang));a.later(show,1300);
   a.board.onclick=e=>{const b=e.target.closest('[data-a]');if(b&&a.live())answer(+b.dataset.a)};
