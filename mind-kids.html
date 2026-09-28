@@ -755,14 +755,15 @@ gen(L){const id=pick([3,4,5,7,8,9,13,14,23]),s=G[id-1],q=s.gen(Math.max(L,3));
   return{...q,key:'c'+id+'-'+q.key,time:q.time?Math.min(q.time,Math.max(6,14-L)):Math.max(8,18-L),prompt:`<span class="mini">${s.icon} ${loc(s.name)}</span><br>${q.prompt}`,say:q.say}}});
 
 /* ================= Age-scaled difficulty (new games) ================= */
+const SCHULTE_BAD_MS=400;
 const AGE_CFG={
   schulte:{'4-6':{n1:3,n2:4,split:6,time:45},'7-9':{n1:4,n2:5,split:6,time:40},'10-12':{n1:5,n2:6,split:6,time:35}},
   colors:{'4-6':{n1:3,n2:4,time:9},'7-9':{n1:4,n2:5,time:7},'10-12':{n1:6,n2:6,time:5}},
   mathmem:{'4-6':{min:1,max:5,c1:2,c2:4,dur:1500,gap:250,ans:10,opts:3},'7-9':{min:1,max:9,c1:2,c2:6,dur:1100,gap:250,ans:9,opts:4},'10-12':{min:1,max:20,c1:3,c2:8,dur:800,gap:250,ans:8,opts:4}},
   numpos:{'4-6':{n:3,c1:2,c2:5,show:3000},'7-9':{n:4,c1:3,c2:7,show:2500},'10-12':{n:5,c1:4,c2:9,show:2000}},
   pattern:{'4-6':{n:3,c1:2,c2:4,show:1800},'7-9':{n:4,c1:3,c2:7,show:1500},'10-12':{n:5,c1:4,c2:10,show:1200}},
-  fly:{'4-6':{n:3,c1:2,c2:5,speed:1100,ans:14,diag:false},'7-9':{n:5,c1:3,c2:8,speed:850,ans:16,diag:true},'10-12':{n:5,c1:5,c2:15,speed:500,ans:18,diag:true}},
-  mental:{'4-6':{add:{min:1,max:10},sub:{min:1,max:20},subFromL:6,time:10},'7-9':{add:{min:10,max:100},sub:{min:10,max:100},mul:{min:2,max:5},mulFromL:6,time:8},'10-12':{add:{min:10,max:99},sub:{min:10,max:99},mul:{min:2,max:10},div:{min:2,max:10},time:6}}
+  fly:{'4-6':{n:3,c1:2,c2:5,speed:1100,gap:250,ans:14,diag:false},'7-9':{n:5,c1:3,c2:8,speed:850,gap:250,ans:16,diag:true},'10-12':{n:5,c1:5,c2:12,speed:700,gap:250,ans:18,diag:true}},
+  mental:{'4-6':{add:{min:1,max:10},sub:{min:1,max:20},subFromL:6,time:10},'7-9':{add:{min:10,max1:40,max:100},sub:{min:10,max1:40,max:100},mul:{min:2,max1:3,max:7},mulFromL:6,time:8},'10-12':{add:{min:10,max1:50,max:99},sub:{min:10,max1:50,max:99},mul:{min:2,max1:5,max:10},div:{min:2,max:10,a1:3,a2:12},time:6}}
 };
 
 /* 31 */ def({name:{uz:'Schulte jadvali',ru:'Таблица Шульте'},age:'all',cat:'super',icon:'🔢',art:'a2',sk:['D','T'],desc:{uz:'1 dan boshlab sonlarni tartib bilan tez toping.',ru:'Быстро находите числа по порядку, начиная с 1.'},
@@ -772,7 +773,7 @@ mount(a){const c=AGE_CFG.schulte[a.age],lang=a.lang(),n=a.L<c.split?c.n1:c.n2,N=
   const cells=[...a.board.querySelectorAll('.tc')];
   a.board.onpointerdown=e=>{const b=e.target.closest('.tc');if(!b||!a.live()||b.classList.contains('dim')||b.classList.contains('bad'))return;const v=+b.dataset.v;
     if(v===next){b.classList.add('ok','dim');Snd.tap();next++;if(next>N){t.stop();a.done(true,{bonus:Math.round(t.left()*6)})}else pr()}
-    else{b.classList.add('bad');if(a.miss()){t.stop();const nx=cells.find(x=>+x.dataset.v===next);if(nx)nx.classList.add('ok');a.done(false,{msg:loc({uz:'Noto‘g‘ri son bosildi.',ru:'Нажато неверное число.'},lang)})}else hint(loc({uz:`Avval ${next} ni toping`,ru:`Сначала найдите ${next}`},lang))}};
+    else{b.classList.add('bad');if(a.miss()){t.stop();const nx=cells.find(x=>+x.dataset.v===next);if(nx)nx.classList.add('ok');a.done(false,{msg:loc({uz:'Noto‘g‘ri son bosildi.',ru:'Нажато неверное число.'},lang)})}else{hint(loc({uz:`Avval ${next} ni toping`,ru:`Сначала найдите ${next}`},lang));a.later(()=>b.classList.remove('bad'),SCHULTE_BAD_MS)}}};
   const t=a.timer(c.time,()=>a.done(false,{msg:tr('timeup')}))}});
 
 /* 32 */ def({name:{uz:'Rang chalg‘itadi',ru:'Цветовая путаница'},age:'all',cat:'super',icon:'🎨',art:'a4',sk:['D','T'],desc:{uz:'So‘zning ma’nosiga emas, yozuv rangiga qarab tanlang.',ru:'Выбирайте не значение слова, а цвет его надписи.'},
@@ -816,9 +817,7 @@ mount(a){const c=AGE_CFG.numpos[a.age],lang=a.lang(),L=a.L,n=c.n,N=n*n,cnt=Math.
   a.later(()=>{idx.forEach(i=>cells[i].textContent='');a.prompt(loc({uz:`${next}-sonni bosing · ${next}/${cnt}`,ru:`Нажмите число ${next} · ${next}/${cnt}`},lang));
     a.board.onclick=e=>{const b=e.target.closest('.tc');if(!b||!a.live()||b.classList.contains('dim')||b.classList.contains('bad'))return;const i=+b.dataset.i;
       if(idx[next-1]===i){b.textContent=next;b.classList.add('ok','dim');Snd.tap();next++;if(next>cnt)return a.done(true);a.prompt(loc({uz:`${next}-sonni bosing · ${next}/${cnt}`,ru:`Нажмите число ${next} · ${next}/${cnt}`},lang))}
-      else{b.classList.add('bad');
-        if(a.miss()){idx.forEach((ii,k)=>{if(k>=next-1){cells[ii].textContent=k+1;cells[ii].classList.add('ok')}});a.done(false,{msg:loc({uz:'Qolgan sonlar yashil bilan ko‘rsatildi.',ru:'Остальные числа показаны зелёным.'},lang)})}
-        else hint(loc({uz:'Boshqa katakni sinab ko‘ring',ru:'Попробуйте другую клетку'},lang))}}},c.show)}});
+      else{b.classList.add('bad');a.miss();idx.forEach((ii,k)=>{if(k>=next-1){cells[ii].textContent=k+1;cells[ii].classList.add('ok')}});a.done(false,{msg:loc({uz:'Qolgan sonlar yashil bilan ko‘rsatildi.',ru:'Остальные числа показаны зелёным.'},lang)})}}},c.show)}});
 
 /* 35 */ def({name:{uz:'Qora kataklar',ru:'Чёрные клетки'},age:'all',cat:'creative',icon:'⬛',art:'a5',sk:['X','F'],desc:{uz:'Bir lahza qorayib turgan kataklarni eslab, hammasini toping.',ru:'Запомните ненадолго почерневшие клетки и найдите все.'},
 mount(a){const c=AGE_CFG.pattern[a.age],lang=a.lang(),L=a.L,n=c.n,N=n*n,cnt=Math.min(lerp(c.c1,c.c2,L),N),set=new Set(sample(range(N),cnt));let got=0,phase='show';
@@ -834,29 +833,27 @@ mount(a){const c=AGE_CFG.pattern[a.age],lang=a.lang(),L=a.L,n=c.n,N=n*n,cnt=Math
 /* 36 */ const FLY_DIRS=[{dr:-1,dc:0,a:'⬆️'},{dr:1,dc:0,a:'⬇️'},{dr:0,dc:-1,a:'⬅️'},{dr:0,dc:1,a:'➡️'},{dr:-1,dc:-1,a:'↖️'},{dr:-1,dc:1,a:'↗️'},{dr:1,dc:-1,a:'↙️'},{dr:1,dc:1,a:'↘️'}];
 def({name:{uz:'Chivin yo‘li',ru:'Путь мухи'},age:'all',cat:'creative',icon:'🪰',art:'a6',sk:['F','D'],desc:{uz:'Chivin qayerga uchib borganini strelkalardan kuzatib, joyini toping.',ru:'Следите за стрелками и найдите, куда улетела муха.'},
 mount(a){const c=AGE_CFG.fly[a.age],lang=a.lang(),L=a.L,n=c.n,N=n*n,cnt=lerp(c.c1,c.c2,L),cen=(n-1)>>1,ci=cen*n+cen,dirs=c.diag?FLY_DIRS:FLY_DIRS.slice(0,4);let r=cen,cc=cen,path=[];
-  for(let i=0;i<cnt;i++){const ord=shuffle(dirs);let moved=false;for(const d of ord){const nr=r+d.dr,nc=cc+d.dc;if(nr>=0&&nr<n&&nc>=0&&nc<n){path.push(d);r=nr;cc=nc;moved=true;break}}if(!moved)path.push(dirs[0])}
+  for(let i=0;i<cnt;i++){const ord=shuffle(dirs);for(const d of ord){const nr=r+d.dr,nc=cc+d.dc;if(nr>=0&&nr<n&&nc>=0&&nc<n){path.push(d);r=nr;cc=nc;break}}}
   a.board.innerHTML=`<div class="tgrid" style="--n:${n};--fs:26px;--w:${Math.min(n*58,300)}px">${range(N).map(i=>`<span class="tc">${i===ci?'🪰':''}</span>`).join('')}</div>`;
   const cells=[...a.board.querySelectorAll('.tc')],flyC=cells[ci];
   a.prompt(loc({uz:'Chivin qayerga uchishini diqqat bilan kuzating 👀',ru:'Внимательно следите, куда летит муха 👀'},lang),loc({uz:'Chivinni diqqat bilan kuzating',ru:'Внимательно следите за мухой'},lang));
-  let i=0;const showArrow=()=>{if(i>=path.length){flyC.textContent='';return ask()}flyC.textContent=path[i].a;i++;a.prompt(loc({uz:`Qadam ${i}/${cnt}`,ru:`Шаг ${i}/${cnt}`},lang));a.later(showArrow,c.speed)};
+  let i=0;const showArrow=()=>{flyC.textContent=path[i].a;i++;a.prompt(loc({uz:`Qadam ${i}/${cnt}`,ru:`Шаг ${i}/${cnt}`},lang));a.later(()=>{flyC.textContent='';if(i>=path.length)return ask();a.later(showArrow,c.gap)},c.speed)};
   a.later(showArrow,c.speed);
   const ask=()=>{a.prompt(loc({uz:'Chivin hozir qayerda? Bosing!',ru:'Где сейчас муха? Нажмите!'},lang),loc({uz:'Chivin hozir qayerda',ru:'Где сейчас муха'},lang));
     a.board.onpointerdown=e=>{const b=e.target.closest('.tc');if(!b||!a.live()||b.classList.contains('bad'))return;const idx=cells.indexOf(b);
       if(idx===r*n+cc){b.classList.add('ok');b.textContent='🪰';a.done(true)}
-      else{b.classList.add('bad');
-        if(a.miss()){cells[r*n+cc].classList.add('ok');cells[r*n+cc].textContent='🪰';a.done(false,{msg:loc({uz:'Chivin boshqa joyda edi.',ru:'Муха была в другом месте.'},lang)})}
-        else hint(loc({uz:'Yana urinib ko‘ring',ru:'Попробуйте ещё раз'},lang))}};
+      else{b.classList.add('bad');a.miss();cells[r*n+cc].classList.add('ok');cells[r*n+cc].textContent='🪰';a.done(false,{msg:loc({uz:'Chivin boshqa joyda edi.',ru:'Муха была в другом месте.'},lang)})}};
     a.timer(c.ans,()=>a.done(false,{msg:tr('timeup')}))}}});
 
 /* 37 */ def({name:{uz:'Og‘zaki hisob',ru:'Устный счёт'},age:'all',cat:'logic',icon:'🧮',art:'a3',sk:['H','T'],desc:{uz:'Misolni tez yeching — 5 ta savoldan iborat.',ru:'Быстро решайте примеры — всего 5 вопросов.'},
-mount(a){const c=AGE_CFG.mental[a.age],L=a.L,age=a.age;let q=0,tmr=null,locked=false;
+mount(a){const c=AGE_CFG.mental[a.age],L=a.L,age=a.age,mx=o=>o.max1!=null?lerp(o.max1,o.max,L):o.max;let q=0,tmr=null,locked=false;
   const ops=age==='4-6'?(L>=c.subFromL?['add','sub']:['add']):age==='7-9'?(L>=c.mulFromL?['add','sub','mul']:['add','sub']):['add','sub','mul','div'];
   const gen=()=>{const op=pick(ops);let x,y,ans,sym;
-    if(op==='div'){y=ri(c.div.min,c.div.max);ans=ri(1,Math.max(1,Math.floor(c.div.max/y)));x=y*ans;sym='÷'}
-    else if(op==='mul'){x=ri(c.mul.min,c.mul.max);y=ri(c.mul.min,c.mul.max);ans=x*y;sym='×'}
-    else if(op==='sub'){x=ri(c.sub.min,c.sub.max);y=ri(c.sub.min,x);ans=x-y;sym='−'}
-    else if(age==='10-12'){x=ri(c.add.min,c.add.max);y=ri(c.add.min,c.add.max);ans=x+y;sym='+'}
-    else{x=ri(c.add.min,c.add.max-c.add.min);y=ri(c.add.min,c.add.max-x);ans=x+y;sym='+'}
+    if(op==='div'){y=ri(c.div.min,c.div.max);ans=ri(2,lerp(c.div.a1,c.div.a2,L));x=y*ans;sym='÷'}
+    else if(op==='mul'){const m=mx(c.mul);x=ri(c.mul.min,m);y=ri(c.mul.min,m);ans=x*y;sym='×'}
+    else if(op==='sub'){const m=mx(c.sub);x=ri(c.sub.min,m);y=ri(c.sub.min,x);ans=x-y;sym='−'}
+    else if(age==='10-12'){const m=mx(c.add);x=ri(c.add.min,m);y=ri(c.add.min,m);ans=x+y;sym='+'}
+    else{const m=mx(c.add);x=ri(c.add.min,m-c.add.min);y=ri(c.add.min,m-x);ans=x+y;sym='+'}
     return{x,y,sym,ans}};
   const step=()=>{if(tmr)tmr.stop();locked=false;if(q>=5)return a.done(true);q++;
     const lang=a.lang();

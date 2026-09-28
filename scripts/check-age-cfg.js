@@ -25,6 +25,7 @@ const AGE_CFG = (0, eval)('(' + cfgSrc + ')');
 
 const AGES = ['4-6', '7-9', '10-12'];
 const LEVELS = [1,2,3,4,5,6,7,8,9,10];
+const FLY_MAX_STEPS = 12;
 const fails = [];
 const ok = (cond, msg) => { if (!cond) fails.push(msg); };
 const isGrid = n => Number.isInteger(n) && n >= 3 && n <= 6;
@@ -88,11 +89,13 @@ for (const age of AGES) {
     ok(isGrid(c.n), `fly/${age}: grid size out of 3..6 range`);
     ok(c.speed > 0, `fly/${age}: speed must be > 0`);
     ok(c.ans > 0, `fly/${age}: answer time must be > 0`);
+    ok(Number.isInteger(c.gap) && c.gap >= 100 && c.gap <= c.speed, `fly/${age}: gap must be an integer in [100, speed]`);
     ok(typeof c.diag === 'boolean', `fly/${age}: diag must be a boolean`);
     ok(c.diag === (age !== '4-6'), `fly/${age}: diag should be false only for 4-6 (diagonals too hard at that age)`);
     for (const L of LEVELS) {
       const cnt = lerp(c.c1, c.c2, L);
       ok(cnt >= 1, `fly/${age}/L${L}: step count ${cnt} must be >= 1`);
+      ok(cnt <= FLY_MAX_STEPS, `fly/${age}/L${L}: step count ${cnt} exceeds FLY_MAX_STEPS (${FLY_MAX_STEPS})`);
     }
   }
   // 37 Og'zaki hisob — arithmetic operand ranges per operation.
@@ -102,11 +105,21 @@ for (const age of AGES) {
     for (const op of ['add', 'sub', 'mul', 'div']) {
       if (!c[op]) continue;
       ok(c[op].min >= 1 && c[op].min <= c[op].max, `mental/${age}/${op}: min/max invalid`);
+      if (c[op].max1 != null) ok(c[op].min <= c[op].max1 && c[op].max1 <= c[op].max, `mental/${age}/${op}: min/max1/max out of order`);
     }
-    // 4-6 and 7-9 cap the addition RESULT at add.max (x=ri(min,max-min), y=ri(min,max-x)),
-    // which only produces a valid ri() range when max-min >= min.
+    // 4-6 and 7-9 cap the addition RESULT at the effective max (x=ri(min,mx-min), y=ri(min,mx-x)),
+    // which only produces a valid ri() range when mx-min >= min. mx grows with L via max1 (lerp),
+    // or is just add.max when there's no max1 (4-6), so this is checked at every level.
     if (age !== '10-12') {
-      ok(c.add.max - c.add.min >= c.add.min, `mental/${age}/add: max-min must be >= min for the capped-sum formula`);
+      for (const L of LEVELS) {
+        const mx = c.add.max1 != null ? lerp(c.add.max1, c.add.max, L) : c.add.max;
+        ok(mx - c.add.min >= c.add.min, `mental/${age}/add/L${L}: max-min must be >= min for the capped-sum formula`);
+      }
+    }
+    if (c.div) {
+      ok(c.div.a1 >= 3, `mental/${age}/div: a1 must be >= 3`);
+      ok(c.div.a1 <= c.div.a2, `mental/${age}/div: a1 must be <= a2`);
+      ok(c.div.min >= 2, `mental/${age}/div: min must be >= 2`);
     }
   }
 }
